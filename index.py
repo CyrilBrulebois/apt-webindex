@@ -11,6 +11,23 @@ DIST = 'buster'
 
 apt_pkg.init_system()
 
+CSS = '''
+table {
+  width: 100%;
+  border: 1px solid #333;
+  border-collapse: collapse;
+}
+th {
+  background-color: #a80030;
+  color: #FFF;
+}
+td {
+  vertical-align: top;
+  border: 1px solid black;
+  padding: 2px 5px;
+}
+'''
+
 # Store [source_arch, package, version, actual_arch, filename]:
 data = []
 for arch in ARCHES:
@@ -23,10 +40,12 @@ for arch in ARCHES:
             f = stanza['Filename']
             data.append([arch, p, v, a, f])
 
-html = ''
+html = '<html><head>\n'
+html += '<title>aptly-webindex</title>\n'
+html += '<style>%s</style>\n' % CSS
 packages = sorted(list(set([row[1] for row in data])))
 
-html += '<table border=1 style="border-collapse: collapse">\n'
+html += '<table>\n'
 html += '<tr><th>Package<br>name</th><th>Newest<br>version</th><th>Newest<br>debs</th><th>Older<br>versions</th></tr>\n'
 for package in packages:
     versions = sorted(list(set([row[2] for row in data if row[1] == package])),
@@ -45,4 +64,6 @@ for package in packages:
 
     html += '<tr><td>%s</td><td style="text-align: center">%s</td><td>%s</td></tr>\n' % (package_info, newest_info, older_info)
 html += '</table>\n'
+html += '</body>\n'
+html += '</html>\n'
 print(html)
