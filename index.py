@@ -27,7 +27,7 @@ td {
   padding: 2px 5px;
   white-space: nowrap;
 }
-td.newest {
+td.centered {
   text-align: center;
 }
 td.versions {
@@ -57,19 +57,23 @@ html += '<tr><th>Package<br>name</th><th>Newest<br>version</th><th>Newest<br>deb
 for package in packages:
     versions = sorted(list(set([row[2] for row in data if row[1] == package])),
                       reverse=True, key=functools.cmp_to_key(apt_pkg.version_compare))
-    # Basic info:
-    newest = versions[0]
-    older = ' | '.join(versions[1:])
 
-    newest_items = sorted([row for row in data if row[1] == package and row[2] == newest])
-    newest_info = newest + '</td><td class="newest">' + ' | '.join(sorted(list(set(['<a href="%s">%s</a>' % (row[4], row[3]) for row in newest_items]))))
+    # Extract version information:
+    newest_version = versions[0]
+    older_versions = ' | '.join(versions[1:])
 
+    # Filter lines matching newest version:
+    newest_items = sorted([row for row in data if row[1] == package and row[2] == newest_version])
+
+    # Build link to pool directory, extracting the dirname of one of the Filename fields:
     pool_dir = re.sub(r'/[^/]+$', '', newest_items[0][4])
     package_info = '<a href="%s">%s</a>' % (pool_dir, package)
 
-    older_info = older
+    # Build links to debs:
+    newest_debs = ' | '.join(sorted(list(set(['<a href="%s">%s</a>' % (row[4], row[3]) for row in newest_items]))))
 
-    html += '<tr><td>%s</td><td style="text-align: center">%s</td><td class="versions">%s</td></tr>\n' % (package_info, newest_info, older_info)
+    html += '<tr><td>%s</td><td class="centered">%s</td><td class="centered">%s</td><td class="versions">%s</td></tr>\n' % (package_info, newest_version, newest_debs, older_versions)
+
 html += '</table>\n'
 html += '</body>\n'
 html += '</html>\n'
