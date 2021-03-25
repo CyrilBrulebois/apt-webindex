@@ -41,11 +41,11 @@ for arch in ARCHES:
     with open('dists/%s/main/binary-%s/Packages' % (DIST, arch), 'r') as packages_fp:
         tagfile = apt_pkg.TagFile(packages_fp)
         for stanza in tagfile:
-            p = stanza['Package']
-            v = stanza['Version']
-            a = stanza['Architecture']
-            f = stanza['Filename']
-            data.append([arch, p, v, a, f])
+            fp = stanza['Package']
+            fv = stanza['Version']
+            fa = stanza['Architecture']
+            ff = stanza['Filename']
+            data.append([arch, fp, fv, fa, ff])
 
 html = '<html><head>\n'
 html += '<title>aptly-webindex</title>\n'
