@@ -51,10 +51,10 @@ td.versions {
 }
 
 /* Multi-dist support: try to align columns across tables */
-.col1 { width: 20%; }
+.col1 { width: 15%; }
 .col2 { width: 10%; }
 .col3 { width:  5%; }
-.col4 { width: 65%; }
+.col4 { width: 70%; }
 '''
 
 
