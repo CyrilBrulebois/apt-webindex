@@ -23,6 +23,9 @@ h1 {
   color: #a80030;
   text-decoration: underline;
 }
+h4 {
+  text-align: center;
+}
 table {
   width: 100%;
   border: 1px solid #333;
@@ -31,6 +34,9 @@ table {
 th {
   background-color: #a80030;
   color: #FFF;
+}
+th.distribution {
+  background-color: #880020;
 }
 td {
   vertical-align: top;
@@ -68,16 +74,19 @@ with doc.head:
 
 with doc.body:
     h1(TITLE)
-    with div():
+    with h4():
         text('Available distributions: ')
         a('buster', href='#buster', _class='mono')
         text(' — ')
         text('direct access: ')
-        a('dists/', href='dists/', _class='mono')
+        a('dists', href='dists/', _class='mono')
         text(' | ')
-        a('pool/', href='pool/', _class='mono')
+        a('pool', href='pool/', _class='mono')
 
 with doc.add(table()):
+    with tr():
+        attr(id=DIST)
+        th('Distribution: %s' % DIST, colspan=4, _class='distribution')
     with tr():
         th(raw('Package<br>name'))
         th(raw('Newest<br>versions'))
