@@ -4,6 +4,7 @@
 import functools
 import os
 import re
+import time
 
 import apt_pkg
 import dominate
@@ -56,7 +57,34 @@ td.versions {
 .col2 { width: 10%; }
 .col3 { width:  5%; }
 .col4 { width: 70%; }
+
+/* Newness indicators, the higher the hotter */
+.hot1 { background-color: #555753; }
+.hot2 { background-color: #d3d7cf; }
+.hot3 { background-color: #edd400; }
+.hot4 { background-color: #f57900; }
+.hot5 { background-color: #cc0000; }
 '''
+
+
+def get_time_info(diff):
+    """Return a human representation based of the delta against current time"""
+    if diff > 60 * 24 * 3600:
+        desc = '%d+ months ago' % (diff/(30*24*3600))
+        color = 'hot1'
+    elif diff > 2 * 24 * 3600:
+        desc = '%d+ days ago' % (diff/(1*24*3600))
+        color = 'hot2'
+    elif diff > 2 * 3600:
+        desc = '%d+ hours ago' % (diff/(1*3600))
+        color = 'hot3'
+    elif diff > 2 * 60:
+        desc = '%d+ minutes ago' % (diff/(1*60))
+        color = 'hot4'
+    else:
+        desc = '%d seconds ago' % diff
+        color = 'hot5'
+    return desc, color
 
 
 def render_dist_html(dist):
@@ -76,6 +104,7 @@ def render_dist_html(dist):
                 ff = stanza['Filename']
                 data.append([arch, fp, fv, fa, ff])
 
+    now = time.time()
     packages = sorted(list(set([row[1] for row in data])))
     for package in packages:
         versions = sorted(list(set([row[2] for row in data if row[1] == package])),
@@ -94,9 +123,13 @@ def render_dist_html(dist):
         # Prepare links to debs:
         newest_debs = sorted(list(set([(row[3], row[4]) for row in newest_items])))
 
+        # Get timestamp from the first matching filename:
+        ts = os.stat(newest_items[0][4]).st_mtime
+        time_desc, time_color = get_time_info(now-ts)
+
         with tr():
             td(a(package, href=pool_dir))
-            td(newest_version, _class='centered')
+            td(newest_version, title=time_desc, _class='centered %s' % time_color)
             with td(_class='centered'):
                 # XXX: Maybe there's a way to implement join() in a better way:
                 for i, row in enumerate(newest_debs):
@@ -104,7 +137,6 @@ def render_dist_html(dist):
                         text(' | ')
                     a(row[0], href=row[1])
             td(older_versions, _class='versions')
-
 
 
 if __name__ == '__main__':
@@ -132,6 +164,11 @@ if __name__ == '__main__':
             a('dists', href='dists/', _class='mono')
             text(' | ')
             a('pool', href='pool/', _class='mono')
+
+        with h4():
+            text('Freshness scale: ')
+            for i in range(5):
+                span('    ', _class='hot%d' % (i+1))
 
     for dist in dists:
         with doc.add(table()):
