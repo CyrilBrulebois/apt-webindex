@@ -2,6 +2,7 @@
 # © 2021 Cyril Brulebois <cyril@debamax.com>
 
 import functools
+import os
 import re
 
 import apt_pkg
@@ -13,7 +14,7 @@ from dominate.util import text, raw
 TITLE = 'aptly-webindex'
 
 ARCHES = ['amd64', 'arm64']
-DIST = 'buster'
+DISTS = ['buster', 'jessie']
 
 apt_pkg.init_system()
 
@@ -55,43 +56,24 @@ td.versions {
 }
 '''
 
-# Store [source_arch, package, version, actual_arch, filename]:
-data = []
-for arch in ARCHES:
-    with open('dists/%s/main/binary-%s/Packages' % (DIST, arch), 'r') as packages_fp:
-        tagfile = apt_pkg.TagFile(packages_fp)
-        for stanza in tagfile:
-            fp = stanza['Package']
-            fv = stanza['Version']
-            fa = stanza['Architecture']
-            ff = stanza['Filename']
-            data.append([arch, fp, fv, fa, ff])
 
-doc = dominate.document(title=TITLE)
 
-with doc.head:
-    style(CSS)
+def render_dist_html(dist):
+    archs = [re.sub(r'^binary-', '', x)
+             for x in os.listdir('dists/%s/main' % dist)
+             if x.startswith('binary')]
 
-with doc.body:
-    h1(TITLE)
-    with h4():
-        text('Available distributions: ')
-        a('buster', href='#buster', _class='mono')
-        text(' — ')
-        text('direct access: ')
-        a('dists', href='dists/', _class='mono')
-        text(' | ')
-        a('pool', href='pool/', _class='mono')
-
-with doc.add(table()):
-    with tr():
-        attr(id=DIST)
-        th('Distribution: %s' % DIST, colspan=4, _class='distribution')
-    with tr():
-        th(raw('Package<br>name'))
-        th(raw('Newest<br>versions'))
-        th(raw('Newest<br>debs'))
-        th(raw('Older<br>versions'))
+    # Store [source_arch, package, version, actual_arch, filename]:
+    data = []
+    for arch in archs:
+        with open('dists/%s/main/binary-%s/Packages' % (dist, arch), 'r') as packages_fp:
+            tagfile = apt_pkg.TagFile(packages_fp)
+            for stanza in tagfile:
+                fp = stanza['Package']
+                fv = stanza['Version']
+                fa = stanza['Architecture']
+                ff = stanza['Filename']
+                data.append([arch, fp, fv, fa, ff])
 
     packages = sorted(list(set([row[1] for row in data])))
     for package in packages:
@@ -118,5 +100,39 @@ with doc.add(table()):
                 for row in newest_debs:
                     a(row[0], href=row[1])
             td(older_versions, _class='versions')
+
+
+
+if __name__ == '__main__':
+    doc = dominate.document(title=TITLE)
+
+    with doc.head:
+        style(CSS)
+
+    with doc.body:
+        h1(TITLE)
+        with h4():
+            text('Available distributions: ')
+            for dist in DISTS:
+                a(dist, href='#%s' % dist, _class='mono')
+
+            text(' — ')
+            text('direct access: ')
+            a('dists', href='dists/', _class='mono')
+            text(' | ')
+            a('pool', href='pool/', _class='mono')
+
+    for dist in DISTS:
+        with doc.add(table()):
+            with tr():
+                attr(id=dist)
+                th('Distribution: %s' % dist, colspan=4, _class='distribution')
+            with tr():
+                th(raw('Package<br>name'))
+                th(raw('Newest<br>versions'))
+                th(raw('Newest<br>debs'))
+                th(raw('Older<br>versions'))
+            render_dist_html(dist)
+            br()
 
 print(doc)
