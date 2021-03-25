@@ -5,6 +5,10 @@ import functools
 import re
 
 import apt_pkg
+import dominate
+from dominate.tags import *
+from dominate.util import raw
+
 
 ARCHES = ['amd64', 'arm64']
 DIST = 'buster'
@@ -47,34 +51,42 @@ for arch in ARCHES:
             ff = stanza['Filename']
             data.append([arch, fp, fv, fa, ff])
 
-html = '<html><head>\n'
-html += '<title>aptly-webindex</title>\n'
-html += '<style>%s</style>\n' % CSS
-packages = sorted(list(set([row[1] for row in data])))
+doc = dominate.document(title='aptly-webindex')
 
-html += '<table>\n'
-html += '<tr><th>Package<br>name</th><th>Newest<br>version</th><th>Newest<br>debs</th><th>Older<br>versions</th></tr>\n'
-for package in packages:
-    versions = sorted(list(set([row[2] for row in data if row[1] == package])),
-                      reverse=True, key=functools.cmp_to_key(apt_pkg.version_compare))
+with doc.head:
+    style(CSS)
 
-    # Extract version information:
-    newest_version = versions[0]
-    older_versions = ' | '.join(versions[1:])
+with doc.add(table()):
+    with tr():
+        th(raw('Package<br>name'))
+        th(raw('Newest<br>versions'))
+        th(raw('Newest<br>debs'))
+        th(raw('Older<br>versions'))
 
-    # Filter lines matching newest version:
-    newest_items = sorted([row for row in data if row[1] == package and row[2] == newest_version])
+    packages = sorted(list(set([row[1] for row in data])))
+    for package in packages:
+        versions = sorted(list(set([row[2] for row in data if row[1] == package])),
+                          reverse=True, key=functools.cmp_to_key(apt_pkg.version_compare))
 
-    # Build link to pool directory, extracting the dirname of one of the Filename fields:
-    pool_dir = re.sub(r'/[^/]+$', '', newest_items[0][4])
-    package_info = '<a href="%s">%s</a>' % (pool_dir, package)
+        # Extract version information:
+        newest_version = versions[0]
+        older_versions = ' | '.join(versions[1:])
 
-    # Build links to debs:
-    newest_debs = ' | '.join(sorted(list(set(['<a href="%s">%s</a>' % (row[4], row[3]) for row in newest_items]))))
+        # Filter lines matching newest version:
+        newest_items = sorted([row for row in data if row[1] == package and row[2] == newest_version])
 
-    html += '<tr><td>%s</td><td class="centered">%s</td><td class="centered">%s</td><td class="versions">%s</td></tr>\n' % (package_info, newest_version, newest_debs, older_versions)
+        # Extract the dirname of one of the Filename fields:
+        pool_dir = re.sub(r'/[^/]+$', '', newest_items[0][4])
 
-html += '</table>\n'
-html += '</body>\n'
-html += '</html>\n'
-print(html)
+        # Prepare links to debs:
+        newest_debs = sorted(list(set([(row[3], row[4]) for row in newest_items])))
+
+        with tr():
+            td(a(package, href=pool_dir))
+            td(newest_version, _class='centered')
+            with td(_class='centered'):
+                for row in newest_debs:
+                    a(row[0], href=row[1])
+            td(older_versions, _class='versions')
+
+print(doc)
