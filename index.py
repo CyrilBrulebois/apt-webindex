@@ -121,7 +121,9 @@ if __name__ == '__main__':
         h1(TITLE)
         with h4():
             text('Available distributions: ')
-            for dist in dists:
+            for i, dist in enumerate(dists):
+                if i != 0:
+                    text(' | ')
                 a(dist, href='#%s' % dist, _class='mono')
 
             text(' — ')
