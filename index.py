@@ -25,6 +25,10 @@ td {
   vertical-align: top;
   border: 1px solid black;
   padding: 2px 5px;
+  white-space: nowrap;
+}
+td.versions {
+  white-space: normal;
 }
 '''
 
@@ -62,7 +66,7 @@ for package in packages:
 
     older_info = older
 
-    html += '<tr><td>%s</td><td style="text-align: center">%s</td><td>%s</td></tr>\n' % (package_info, newest_info, older_info)
+    html += '<tr><td>%s</td><td style="text-align: center">%s</td><td class="versions">%s</td></tr>\n' % (package_info, newest_info, older_info)
 html += '</table>\n'
 html += '</body>\n'
 html += '</html>\n'
