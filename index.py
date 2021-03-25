@@ -97,7 +97,10 @@ def render_dist_html(dist):
             td(a(package, href=pool_dir))
             td(newest_version, _class='centered')
             with td(_class='centered'):
-                for row in newest_debs:
+                # XXX: Maybe there's a way to implement join() in a better way:
+                for i, row in enumerate(newest_debs):
+                    if i != 0:
+                        text(' | ')
                     a(row[0], href=row[1])
             td(older_versions, _class='versions')
 
