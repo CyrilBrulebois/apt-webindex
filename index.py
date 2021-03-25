@@ -123,6 +123,10 @@ def render_dist_html(dist):
         # Prepare links to debs:
         newest_debs = sorted(list(set([(row[3], row[4]) for row in newest_items])))
 
+        # XXX: The following could be surprising if one of the builds
+        #      is delayed for whatever reason (e.g. missing build-dep
+        #      on a CI worker).
+        #
         # Get timestamp from the first matching filename:
         ts = os.stat(newest_items[0][4]).st_mtime
         diff_desc, time_color = get_time_info(now-ts)
