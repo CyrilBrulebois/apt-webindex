@@ -106,7 +106,7 @@ def render_dist_html(dist):
 if __name__ == '__main__':
     # XXX: Maybe error out if that doesn't return anything, or if
     #      dists/<item>/Release is missing
-    dists = os.listdir('dists')
+    dists = sorted(os.listdir('dists'))
     apt_pkg.init_system()
 
     doc = dominate.document(title=TITLE)
