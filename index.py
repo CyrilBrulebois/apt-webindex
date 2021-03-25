@@ -21,6 +21,7 @@ h1 {
 }
 h4 {
   text-align: center;
+  font-weight: normal;
 }
 table {
   width: 100%;
