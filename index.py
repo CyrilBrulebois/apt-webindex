@@ -131,7 +131,7 @@ def render_dist_html(dist):
             td(a(package, href=pool_dir))
             td(newest_version, title=time_desc, _class='centered %s' % time_color)
             with td(_class='centered'):
-                # XXX: Maybe there's a way to implement join() in a better way:
+                # XXX: "manual join"
                 for i, row in enumerate(newest_debs):
                     if i != 0:
                         text(' | ')
@@ -154,6 +154,7 @@ if __name__ == '__main__':
         h1(TITLE)
         with h4():
             text('Available distributions: ')
+            # XXX: "manual join"
             for i, dist in enumerate(dists):
                 if i != 0:
                     text(' | ')
