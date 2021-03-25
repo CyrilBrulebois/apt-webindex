@@ -125,11 +125,13 @@ def render_dist_html(dist):
 
         # Get timestamp from the first matching filename:
         ts = os.stat(newest_items[0][4]).st_mtime
-        time_desc, time_color = get_time_info(now-ts)
+        diff_desc, time_color = get_time_info(now-ts)
+        time_desc = time.strftime('%Y-%m-%d %H:%M:%SZ', time.gmtime(ts))
+        tooltip = '%s\n%s' % (diff_desc, time_desc)
 
         with tr():
             td(a(package, href=pool_dir))
-            td(newest_version, title=time_desc, _class='centered %s' % time_color)
+            td(newest_version, title=tooltip, _class='centered %s' % time_color)
             with td(_class='centered'):
                 # XXX: "manual join"
                 for i, row in enumerate(newest_debs):
