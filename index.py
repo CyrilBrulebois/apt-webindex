@@ -13,9 +13,6 @@ from dominate.util import text, raw
 
 TITLE = 'aptly-webindex'
 
-
-apt_pkg.init_system()
-
 CSS = '''
 h1 {
   text-align: center;
@@ -53,7 +50,6 @@ td.versions {
   font-family: monospace;
 }
 '''
-
 
 
 def render_dist_html(dist):
@@ -105,6 +101,7 @@ if __name__ == '__main__':
     # XXX: Maybe error out if that doesn't return anything, or if
     #      dists/<item>/Release is missing
     dists = os.listdir('dists')
+    apt_pkg.init_system()
 
     doc = dominate.document(title=TITLE)
 
@@ -137,4 +134,4 @@ if __name__ == '__main__':
             render_dist_html(dist)
             br()
 
-print(doc)
+    print(doc)
