@@ -7,8 +7,10 @@ import re
 import apt_pkg
 import dominate
 from dominate.tags import *
-from dominate.util import raw
+from dominate.util import text, raw
 
+
+TITLE = 'aptly-webindex'
 
 ARCHES = ['amd64', 'arm64']
 DIST = 'buster'
@@ -16,6 +18,11 @@ DIST = 'buster'
 apt_pkg.init_system()
 
 CSS = '''
+h1 {
+  text-align: center;
+  color: #a80030;
+  text-decoration: underline;
+}
 table {
   width: 100%;
   border: 1px solid #333;
@@ -51,10 +58,18 @@ for arch in ARCHES:
             ff = stanza['Filename']
             data.append([arch, fp, fv, fa, ff])
 
-doc = dominate.document(title='aptly-webindex')
+doc = dominate.document(title=TITLE)
 
 with doc.head:
     style(CSS)
+
+with doc.body:
+    h1(TITLE)
+    with div():
+        text('Direct access: ')
+        a(raw('<code>dists/<code>'), href='dists/')
+        text(' | ')
+        a(raw('<code>pool/<code>'), href='pool/')
 
 with doc.add(table()):
     with tr():
