@@ -49,6 +49,12 @@ td.versions {
 .mono {
   font-family: monospace;
 }
+
+/* Multi-dist support: try to align columns across tables */
+.col1 { width: 20%; }
+.col2 { width: 10%; }
+.col3 { width:  5%; }
+.col4 { width: 65%; }
 '''
 
 
@@ -127,10 +133,10 @@ if __name__ == '__main__':
                 attr(id=dist)
                 th('Distribution: %s' % dist, colspan=4, _class='distribution')
             with tr():
-                th(raw('Package<br>name'))
-                th(raw('Newest<br>versions'))
-                th(raw('Newest<br>debs'))
-                th(raw('Older<br>versions'))
+                th(raw('Package<br>name'), _class='col1')
+                th(raw('Newest<br>versions'), _class='col2')
+                th(raw('Newest<br>debs'), _class='col3')
+                th(raw('Older<br>versions'), _class='col4')
             render_dist_html(dist)
             br()
 
