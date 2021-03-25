@@ -27,6 +27,9 @@ td {
   padding: 2px 5px;
   white-space: nowrap;
 }
+td.newest {
+  text-align: center;
+}
 td.versions {
   white-space: normal;
 }
@@ -59,7 +62,7 @@ for package in packages:
     older = ' | '.join(versions[1:])
 
     newest_items = sorted([row for row in data if row[1] == package and row[2] == newest])
-    newest_info = newest + '</td><td style="text-align: center">' + ' | '.join(sorted(list(set(['<a href="%s">%s</a>' % (row[4], row[3]) for row in newest_items]))))
+    newest_info = newest + '</td><td class="newest">' + ' | '.join(sorted(list(set(['<a href="%s">%s</a>' % (row[4], row[3]) for row in newest_items]))))
 
     pool_dir = re.sub(r'/[^/]+$', '', newest_items[0][4])
     package_info = '<a href="%s">%s</a>' % (pool_dir, package)
