@@ -44,6 +44,9 @@ td.centered {
 td.versions {
   white-space: normal;
 }
+.mono {
+  font-family: monospace;
+}
 '''
 
 # Store [source_arch, package, version, actual_arch, filename]:
@@ -66,10 +69,13 @@ with doc.head:
 with doc.body:
     h1(TITLE)
     with div():
-        text('Direct access: ')
-        a(raw('<code>dists/<code>'), href='dists/')
+        text('Available distributions: ')
+        a('buster', href='#buster', _class='mono')
+        text(' — ')
+        text('direct access: ')
+        a('dists/', href='dists/', _class='mono')
         text(' | ')
-        a(raw('<code>pool/<code>'), href='pool/')
+        a('pool/', href='pool/', _class='mono')
 
 with doc.add(table()):
     with tr():
