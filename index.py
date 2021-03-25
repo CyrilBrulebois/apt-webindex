@@ -165,8 +165,8 @@ if __name__ == '__main__':
             text(' | ')
             a('pool', href='pool/', _class='mono')
 
-        with h4():
-            text('Freshness scale: ')
+            text(' — ')
+            text('freshness scale: ')
             for i in range(5):
                 span('    ', _class='hot%d' % (i+1))
 
