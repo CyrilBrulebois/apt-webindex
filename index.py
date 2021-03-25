@@ -13,8 +13,6 @@ from dominate.util import text, raw
 
 TITLE = 'aptly-webindex'
 
-ARCHES = ['amd64', 'arm64']
-DISTS = ['buster', 'jessie']
 
 apt_pkg.init_system()
 
@@ -104,6 +102,10 @@ def render_dist_html(dist):
 
 
 if __name__ == '__main__':
+    # XXX: Maybe error out if that doesn't return anything, or if
+    #      dists/<item>/Release is missing
+    dists = os.listdir('dists')
+
     doc = dominate.document(title=TITLE)
 
     with doc.head:
@@ -113,7 +115,7 @@ if __name__ == '__main__':
         h1(TITLE)
         with h4():
             text('Available distributions: ')
-            for dist in DISTS:
+            for dist in dists:
                 a(dist, href='#%s' % dist, _class='mono')
 
             text(' — ')
@@ -122,7 +124,7 @@ if __name__ == '__main__':
             text(' | ')
             a('pool', href='pool/', _class='mono')
 
-    for dist in DISTS:
+    for dist in dists:
         with doc.add(table()):
             with tr():
                 attr(id=dist)
