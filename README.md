@@ -24,6 +24,14 @@ that natively, `reprepro` requires a patch).
 * python3-dominate (for HTML generation)
 
 
+## Development tips
+
+Since the `apt_pkg` module is a C extension module, one might want to
+run `pylint` this way:
+
+    pylint --extension-pkg-whitelist=apt_pkg apt-webindex.py
+
+
 ## Disclaimer
 
 This tool was written on the side, to help
