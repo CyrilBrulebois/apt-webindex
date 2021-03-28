@@ -92,6 +92,7 @@ def get_time_info(diff):
 
 
 def render_dist_html(dist):
+    """Render the HTML table for the specified distribution"""
     archs = [re.sub(r'^binary-', '', x)
              for x in os.listdir('dists/%s/main' % dist)
              if x.startswith('binary')]
