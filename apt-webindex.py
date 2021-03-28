@@ -108,7 +108,7 @@ def render_dist_html(dist):
                 ff = stanza['Filename']
                 data.append([arch, fp, fv, fa, ff])
 
-    now = time.time()
+    now_ts = time.time()
     packages = sorted(list(set(row[1] for row in data)))
     for package in packages:
         versions = sorted(list(set(row[2] for row in data if row[1] == package)),
@@ -132,9 +132,9 @@ def render_dist_html(dist):
         #      on a CI worker).
         #
         # Get timestamp from the first matching filename:
-        ts = os.stat(newest_items[0][4]).st_mtime
-        diff_desc, time_color = get_time_info(now-ts)
-        time_desc = time.strftime('%Y-%m-%d %H:%M:%SZ', time.gmtime(ts))
+        file_ts = os.stat(newest_items[0][4]).st_mtime
+        diff_desc, time_color = get_time_info(now_ts - file_ts)
+        time_desc = time.strftime('%Y-%m-%d %H:%M:%SZ', time.gmtime(file_ts))
         tooltip = '%s\n%s' % (diff_desc, time_desc)
 
         with tr():
