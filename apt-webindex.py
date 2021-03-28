@@ -1,5 +1,9 @@
 #!/usr/bin/python3
 # © 2021 Cyril Brulebois <cyril@debamax.com>
+"""
+Build an index page for a given APT repository, providing an
+overview of the available suites, packages, and versions.
+"""
 
 import functools
 import os
