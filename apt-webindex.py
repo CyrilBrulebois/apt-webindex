@@ -103,6 +103,7 @@ def render_dist_html(dist):
         with open('dists/%s/main/binary-%s/Packages' % (dist, arch), 'r') as packages_fp:
             tagfile = apt_pkg.TagFile(packages_fp)
             for stanza in tagfile:
+                # pylint: disable=invalid-name
                 fp = stanza['Package']
                 fv = stanza['Version']
                 fa = stanza['Architecture']
