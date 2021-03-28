@@ -12,7 +12,7 @@ import time
 
 import apt_pkg
 import dominate
-from dominate.tags import *
+from dominate.tags import a, attr, br, h1, h4, span, style, table, td, th, tr
 from dominate.util import text, raw
 
 
