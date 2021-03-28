@@ -17,7 +17,14 @@ e.g. holding many snapshots built from a CI pipeline (`aptly` supports
 that natively, `reprepro` requires a patch).
 
 
-# Disclaimer
+## Dependencies
+
+* python3
+* python3-apt (for proper version sorting)
+* python3-dominate (for HTML generation)
+
+
+## Disclaimer
 
 This tool was written on the side, to help
 [DEBAMAX](https://debamax.com/) customers keep track of their local
