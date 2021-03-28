@@ -119,7 +119,8 @@ def render_dist_html(dist):
         older_versions = ' | '.join(versions[1:])
 
         # Filter lines matching newest version:
-        newest_items = sorted([row for row in data if row[1] == package and row[2] == newest_version])
+        newest_items = sorted([row for row in data
+                               if row[1] == package and row[2] == newest_version])
 
         # Extract the dirname of one of the Filename fields:
         pool_dir = re.sub(r'/[^/]+$', '', newest_items[0][4])
