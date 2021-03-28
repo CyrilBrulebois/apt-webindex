@@ -4,6 +4,7 @@
 Build an index page for a given APT repository, providing an
 overview of the available suites, packages, and versions.
 """
+# pylint: disable-msg=C0103
 
 import functools
 import os
