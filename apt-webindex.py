@@ -105,9 +105,9 @@ def render_dist_html(dist):
                 data.append([arch, fp, fv, fa, ff])
 
     now = time.time()
-    packages = sorted(list(set([row[1] for row in data])))
+    packages = sorted(list(set(row[1] for row in data)))
     for package in packages:
-        versions = sorted(list(set([row[2] for row in data if row[1] == package])),
+        versions = sorted(list(set(row[2] for row in data if row[1] == package)),
                           reverse=True, key=functools.cmp_to_key(apt_pkg.version_compare))
 
         # Extract version information:
@@ -121,7 +121,7 @@ def render_dist_html(dist):
         pool_dir = re.sub(r'/[^/]+$', '', newest_items[0][4])
 
         # Prepare links to debs:
-        newest_debs = sorted(list(set([(row[3], row[4]) for row in newest_items])))
+        newest_debs = sorted(list(set((row[3], row[4]) for row in newest_items)))
 
         # XXX: The following could be surprising if one of the builds
         #      is delayed for whatever reason (e.g. missing build-dep
