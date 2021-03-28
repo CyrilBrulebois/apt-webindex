@@ -146,6 +146,10 @@ def render_dist_html(dist):
 
 
 if __name__ == '__main__':
+    # XXX: Better CGI vs. CLI detection?
+    if 'REQUEST_METHOD' in os.environ:
+        print('Content-Type: text/html; charset=utf-8\n')
+
     # XXX: Maybe error out if that doesn't return anything, or if
     #      dists/<item>/Release is missing
     dists = sorted(os.listdir('dists'))
