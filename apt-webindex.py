@@ -69,6 +69,13 @@ td.versions {
 .hot3 { background-color: #edd400; }
 .hot4 { background-color: #f57900; }
 .hot5 { background-color: #cc0000; }
+
+.hot1-delayed { background: linear-gradient(to right, #555753, white); }
+.hot2-delayed { background: linear-gradient(to right, #d3d7cf, white); }
+.hot3-delayed { background: linear-gradient(to right, #edd400, white); }
+.hot4-delayed { background: linear-gradient(to right, #f57900, white); }
+.hot5-delayed { background: linear-gradient(to right, #cc0000, white); }
+}
 '''
 
 
@@ -141,10 +148,19 @@ def render_dist_html(dist):
         time_desc = time.strftime('%Y-%m-%d %H:%M:%SZ', time.gmtime(file_ts))
         tooltip = '%s\n%s' % (diff_desc, time_desc)
 
+        # With amd64 builds being usually much quicker, announce a delayed build
+        # if there's no matching arm64 package. We could also work by excluding
+        # Architecture: all packages but we already have a number of packages
+        # that only make sense on arm64, so that would give false positives:
+        if len(newest_debs) == 1 and newest_debs[0][0] == 'amd64':
+            delayed_build = "%s %s-delayed" % (time_color, time_color)
+        else:
+            delayed_build = ""
+
         with tr():
             td(a(package, href=pool_dir))
             td(newest_version, title=tooltip, _class='centered %s' % time_color)
-            with td(_class='centered'):
+            with td(_class='centered %s' % delayed_build):
                 # XXX: "manual join"
                 for i, row in enumerate(newest_debs):
                     if i != 0:
