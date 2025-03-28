@@ -16,6 +16,14 @@ import dominate
 from dominate.tags import a, attr, br, h1, h4, span, style, table, td, th, tr
 from dominate.util import text, raw
 
+# Use to sort (known) distributions, latest first:
+DISTS = {
+  'buster': 10,
+  'bullseye': 11,
+  'bookworm': 12,
+  'trixie': 13,
+  'forky': 14,
+}
 
 TITLE = 'aptly-webindex'
 
@@ -177,7 +185,7 @@ if __name__ == '__main__':
 
     # XXX: Maybe error out if that doesn't return anything, or if
     #      dists/<item>/Release is missing
-    dists = sorted(os.listdir('dists'))
+    dists = sorted(os.listdir('dists'), key=lambda x: (-DISTS.get(x, -1), x))
     apt_pkg.init_system()
 
     doc = dominate.document(title=TITLE)
