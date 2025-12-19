@@ -83,7 +83,6 @@ td.versions {
 .hot3-delayed { background: linear-gradient(to right, #edd400, white); }
 .hot4-delayed { background: linear-gradient(to right, #f57900, white); }
 .hot5-delayed { background: linear-gradient(to right, #cc0000, white); }
-}
 '''
 
 
