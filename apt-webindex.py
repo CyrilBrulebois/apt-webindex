@@ -224,6 +224,6 @@ if __name__ == '__main__':
                 th(raw('Newest<br>debs'), _class='col3')
                 th(raw('Older<br>versions'), _class='col4')
             render_dist_html(dist)
-            br()
+        br()
 
     print(doc)
