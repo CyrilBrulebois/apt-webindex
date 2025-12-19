@@ -213,17 +213,17 @@ if __name__ == '__main__':
             for i in range(5):
                 span('    ', _class='hot%d' % (i+1))
 
-    for dist in dists:
-        with doc.add(table()):
-            with tr():
-                attr(id=dist)
-                th('Distribution: %s' % dist, colspan=4, _class='distribution')
-            with tr():
-                th(raw('Package<br>name'), _class='col1')
-                th(raw('Newest<br>versions'), _class='col2')
-                th(raw('Newest<br>debs'), _class='col3')
-                th(raw('Older<br>versions'), _class='col4')
-            render_dist_html(dist)
-        br()
+        for dist in dists:
+            with table():
+                with tr():
+                    attr(id=dist)
+                    th('Distribution: %s' % dist, colspan=4, _class='distribution')
+                with tr():
+                    th(raw('Package<br>name'), _class='col1')
+                    th(raw('Newest<br>versions'), _class='col2')
+                    th(raw('Newest<br>debs'), _class='col3')
+                    th(raw('Older<br>versions'), _class='col4')
+                render_dist_html(dist)
+            br()
 
     print(doc)
